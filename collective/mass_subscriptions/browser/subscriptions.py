@@ -55,7 +55,8 @@ class MassSubscriptionsView(BrowserView):
         ptool = getToolByName(self.context, 'plone_utils')
         mailhost = getToolByName(self.context, 'MailHost')
         portal_url = getToolByName(self.context, 'portal_url')
-        mfrom = portal_url.getPortalObject().getProperty('email_from_address')
+        #mfrom = portal_url.getPortalObject().getProperty('email_from_address')
+        mfrom = "admin@dgn.no"
         message = mail_template.replace("$username", username).replace("$portal_url", portal_url())\
                         .replace("$password", password)
         for p in self.props:
