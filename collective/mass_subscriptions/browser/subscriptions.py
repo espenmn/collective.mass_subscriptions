@@ -19,7 +19,7 @@ except ImportError:
 from collective.mass_subscriptions import messageFactory as _
 
 class MassSubscriptionsView(BrowserView):
-    
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -52,6 +52,7 @@ class MassSubscriptionsView(BrowserView):
         return props
 
     def _sendConfirmationMail(self, email, username, password, userdata, subject, mail_template):
+        ptool = getToolByName(self.context, 'plone_utils')
         mailhost = getToolByName(self.context, 'MailHost')
         portal_url = getToolByName(self.context, 'portal_url')
         mfrom = portal_url.getPortalObject().getProperty('email_from_address')
@@ -89,17 +90,17 @@ class MassSubscriptionsView(BrowserView):
         form = self.request.form
         regtool = getToolByName(context, 'portal_registration')
         ptool = getToolByName(self.context, 'plone_utils')
-        
+
         reader = csv.reader(form.get('csv'))
         send_mail = form.get('mail', False)
         subject = form.get('subject', '')
         mail_template = form.get('mail_template', '')
-        
+
         if send_mail and (not subject or not mail_template):
             ptool.addPortalMessage(_(u"To send confirmation e-mail to users you need "
                                       "to provide both subject and a template"), type="error")
             return
-        
+
         first = True
         cnt = 0
 
@@ -132,7 +133,7 @@ class MassSubscriptionsView(BrowserView):
                                                  mapping={'username': username},
                                                  ),
                                                type="warning")
-                                               
+
                 if userdata.get('group') and self.can_manage_groups:
                     group=userdata.get('group')
                     api.group.add_user(groupname=group, username=username)
