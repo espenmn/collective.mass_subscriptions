@@ -55,14 +55,14 @@ class MassSubscriptionsView(BrowserView):
         ptool = getToolByName(self.context, 'plone_utils')
         mailhost = getToolByName(self.context, 'MailHost')
         portal_url = getToolByName(self.context, 'portal_url')
-        #mfrom = portal_url.getPortalObject().getProperty('email_from_address')
+        mfrom = portal_url.getPortalObject().getProperty('email_from_address')
         mfrom = "admin@dgn.no"
         message = mail_template.replace("$username", username).replace("$portal_url", portal_url())\
                         .replace("$password", password)
         for p in self.props:
             message = message.replace("$data-%s" % p, userdata.get(p, ''))
         try:
-            mailhost.secureSend(message, email, mfrom, subject=subject, charset='utf-8')
+            mailhost.send(message, email, mfrom, subject=subject, charset='utf-8')
         except:
             ptool.addPortalMessage(_("send_mail_error_message",
                                      default=u"Error while sending e-mail to $email",
